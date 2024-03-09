@@ -40,22 +40,13 @@ jobs:
     environment:
       name: 'Staging'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E0565CABEFB24AB783C3FE33BB7BECB5 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E3975D52783A4188B51584BFFDB1CE2B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E92D7A2D10C0420BA0F0FF1938360203 }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -63,4 +54,4 @@ jobs:
           app-name: 'azure-cd-web-app'
           slot-name: 'Staging'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D8695AFC476741D68B33433B1115F62B }}
